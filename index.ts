@@ -70,6 +70,7 @@ class Stage {
 
     canvas : HTMLCanvasElement = document.createElement('canvas')
     context : CanvasRenderingContext2D 
+    renderer : Renderer = new Renderer()
 
     initCanvas() {
         this.canvas.width = w 
@@ -81,11 +82,15 @@ class Stage {
     render() {
         this.context.fillStyle = backColor
         this.context.fillRect(0, 0, w, h)
+        this.renderer.render(this.context)
     }
 
     handleTap() {
-        this.canvas.onmousedown = () => {
-            
+        this.canvas.onmousedown = (event) => {
+            const {offsetX, offsetY} = event
+            this.renderer.handleTap(offsetX, offsetY, () => {
+                this.render()
+            })
         }
     }
 
@@ -205,7 +210,7 @@ class Renderer {
         this.tsc.draw(context)
     }
 
-    handleTap(cb : Function, x : number, y : number) {
+    handleTap(x : number, y : number, cb : Function) {
         this.tsc.startUpdating(x, y, () => {
             this.animator.start(() => {
                 cb()
