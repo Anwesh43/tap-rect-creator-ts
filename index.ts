@@ -166,7 +166,7 @@ class TapRectCreator {
 
     nodes : Array<TRCNode> = []
     i : number = 0 
-    
+
     draw(context : CanvasRenderingContext2D) {
         this.nodes.forEach((node) => {
             node.draw(context)
@@ -192,6 +192,28 @@ class TapRectCreator {
             if (this.nodes.length == 1) {
                 cb()
             }
+        })
+    }
+}
+
+class Renderer {
+
+    tsc : TapRectCreator = new TapRectCreator()
+    animator : Animator = new Animator()
+
+    render(context : CanvasRenderingContext2D) {
+        this.tsc.draw(context)
+    }
+
+    handleTap(cb : Function, x : number, y : number) {
+        this.tsc.startUpdating(x, y, () => {
+            this.animator.start(() => {
+                cb()
+                this.tsc.update(() => {
+                    this.animator.stop()
+                    cb()
+                })
+            })
         })
     }
 }
