@@ -29,3 +29,39 @@ class ScaleUtil {
         return Math.sin(scale * Math.PI)
     }
 }
+
+class DrawingUtil {
+
+    static drawLine(context : CanvasRenderingContext2D, x1 : number, y1 : number, x2 : number, y2 : number) {
+        context.beginPath()
+        context.moveTo(x1, y1)
+        context.lineTo(x2, y2)
+        context.stroke()
+    }
+
+    static drawTapRectCreator(context : CanvasRenderingContext2D, x : number, y : number, scale : number) {
+        const size : number = Math.min(w, h) / sizeFactor
+        const sf : number = ScaleUtil.sinify(scale)
+        const sf1 : number = ScaleUtil.divideScale(sf, 0, parts)
+        const sf2 : number = ScaleUtil.divideScale(sf, 1, parts)
+        const ux : number = size * 0.5 * sf1 
+        const uy : number = -(h - y) * sf2 
+        context.save()
+        context.translate(x, h)
+        DrawingUtil.drawLine(context, -ux, uy, ux, uy)
+        for (var j = 0; j < 2; j++) {
+            context.save()
+            context.translate(-size / 2 + size * j, 0)
+            DrawingUtil.drawLine(context, 0, 0, 0, uy)
+            context.restore()
+        }
+        context.restore()
+    }
+
+    static drawTRCNode(context : CanvasRenderingContext2D, i : number, scale : number, x : number, y : number) {
+        context.lineCap = 'round'
+        context.lineWidth = Math.min(w, h) / strokeFactor 
+        context.strokeStyle = colors[i]
+        DrawingUtil.drawTapRectCreator(context, x, y, scale)
+    }
+}
