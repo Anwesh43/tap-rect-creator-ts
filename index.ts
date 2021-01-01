@@ -161,3 +161,37 @@ class TRCNode {
         this.state.startUpdating(cb)
     }
 }
+
+class TapRectCreator {
+
+    nodes : Array<TRCNode> = []
+    i : number = 0 
+    
+    draw(context : CanvasRenderingContext2D) {
+        this.nodes.forEach((node) => {
+            node.draw(context)
+        })
+    }
+
+    update(cb : Function) {
+        this.nodes.forEach((node) => {
+            node.update(() => {
+                this.nodes.splice(0, 1)
+                if (this.nodes.length == 0) {
+                    cb()
+                }
+            })
+        })
+    }
+
+    startUpdating(x : number, y : number, cb : Function) {
+        const node = new TRCNode(this.i, x, y)
+        this.i++ 
+        this.nodes.push(node)
+        node.startUpdating(() => {
+            if (this.nodes.length == 1) {
+                cb()
+            }
+        })
+    }
+}
