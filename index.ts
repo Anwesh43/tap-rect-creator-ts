@@ -61,7 +61,7 @@ class DrawingUtil {
     static drawTRCNode(context : CanvasRenderingContext2D, i : number, scale : number, x : number, y : number) {
         context.lineCap = 'round'
         context.lineWidth = Math.min(w, h) / strokeFactor 
-        context.strokeStyle = colors[i]
+        context.strokeStyle = colors[i % colors.length]
         DrawingUtil.drawTapRectCreator(context, x, y, scale)
     }
 }
