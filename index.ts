@@ -140,3 +140,24 @@ class Animator {
         }
     }
 }
+
+class TRCNode {
+
+
+    state : State = new State()
+
+    constructor(private i : number, private x : number, private y : number) {
+    }
+
+    draw(context : CanvasRenderingContext2D) {
+        DrawingUtil.drawTRCNode(context, this.i, this.state.scale, this.x, this.y)
+    }
+
+    update(cb : Function) {
+        this.state.update(cb)
+    }
+
+    startUpdating(cb : Function) {
+        this.state.startUpdating(cb)
+    }
+}
